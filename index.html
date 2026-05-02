@@ -15,6 +15,8 @@
             --text-dark: #111111;
             --text-light: #f5f5f7;
             --text-muted: #86868b;
+            --brand-red: #cc0000; /* Rojo del logo */
+            --brand-blue: #0066cc; /* Azul del logo */
             --transition-smooth: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -38,38 +40,50 @@
         nav {
             position: fixed;
             top: 0; width: 100%;
-            background: rgba(251, 250, 248, 0.7);
+            background: rgba(251, 250, 248, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5vw;
-            border-bottom: 1px solid rgba(0,0,0,0.03);
+            padding: 15px 5vw; /* Reducido un poco el padding vertical para acomodar el logo más grande */
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: padding 0.4s ease, background 0.4s ease;
         }
         
         .nav-scrolled {
-            padding: 12px 5vw;
-            background: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
+            padding: 10px 5vw;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
         }
 
-        .nav-logo { height: 35px; transition: 0.3s; }
+        /* Logo de navegación más grande */
+        .nav-logo { height: 60px; transition: 0.3s; }
+        .nav-scrolled .nav-logo { height: 50px; }
         
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
         .nav-links a {
-            color: var(--text-dark);
             text-decoration: none;
-            margin-left: 40px;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-weight: 600;
-            opacity: 0.8;
+            font-weight: 700; /* Un poco más de peso para que destaquen los colores */
+            opacity: 0.85;
             transition: 0.3s;
         }
-        .nav-links a:hover { opacity: 1; color: #000; }
+
+        /* Colores personalizados para los enlaces del menú */
+        .nav-link-experiencia { color: var(--brand-red); }
+        .nav-link-especialidad { color: var(--text-dark); }
+        .nav-link-filosofia { color: var(--brand-blue); }
+        .nav-link-contacto { color: var(--text-dark); }
+
+        .nav-links a:hover { opacity: 1; transform: scale(1.05); }
 
         /* =========================================
            ANIMACIONES AVANZADAS
@@ -275,10 +289,10 @@
     <nav id="navbar">
         <img src="logo-basico.png" alt="AHS Logo" class="nav-logo">
         <div class="nav-links">
-            <a href="#experiencia">Experiencia</a>
-            <a href="#servicios">Especialidad</a>
-            <a href="#valores">Filosofía</a>
-            <a href="#contacto">Contacto</a>
+            <a href="#experiencia" class="nav-link-experiencia">Experiencia</a>
+            <a href="#servicios" class="nav-link-especialidad">Especialidad</a>
+            <a href="#valores" class="nav-link-filosofia">Filosofía</a>
+            <a href="#contacto" class="nav-link-contacto">Contacto</a>
         </div>
     </nav>
 
@@ -347,7 +361,6 @@
 
     <!-- MARCAS -->
     <section class="brands-section">
-        <!-- Texto modificado aquí -->
         <span class="kicker reveal-up">Nuestras marcas de confianza</span>
         <div class="brands-container reveal-up delay-1">
             <img src="daikin.png" alt="Daikin">
