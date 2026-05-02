@@ -396,8 +396,8 @@
                 <span class="badge">9:00h - 19:00h</span>
             </a>
 
-            <!-- EMAIL ARREGLADO PARA PC Y MÓVIL -->
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ahsclimatizacion@gmail.com" target="_blank" class="contact-card reveal-up delay-2">
+            <!-- EMAIL (CON LÓGICA INTELIGENTE PC/MÓVIL) -->
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ahsclimatizacion@gmail.com" target="_blank" class="contact-card reveal-up delay-2" id="emailContactLink">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 <h4>ahsclimatizacion@gmail.com</h4>
                 <p>Solicita presupuesto sin compromiso</p>
@@ -455,19 +455,27 @@
             const heroMainLogo = document.getElementById('heroMainLogo');
             let isTappedOnce = false;
 
-            heroMapLink.addEventListener('click', function(e) {
-                // Comprueba si el dispositivo usa pantalla táctil
-                if (window.matchMedia("(pointer: coarse)").matches) {
-                    if (!isTappedOnce) {
-                        // Es el primer toque: prevenimos abrir el enlace y mostramos el color
-                        e.preventDefault(); 
-                        heroMainLogo.classList.add('mobile-color-active');
-                        isTappedOnce = true;
+            if (heroMapLink && heroMainLogo) {
+                heroMapLink.addEventListener('click', function(e) {
+                    // Comprueba si el dispositivo usa pantalla táctil
+                    if (window.matchMedia("(pointer: coarse)").matches) {
+                        if (!isTappedOnce) {
+                            // Es el primer toque: prevenimos abrir el enlace y mostramos el color
+                            e.preventDefault(); 
+                            heroMainLogo.classList.add('mobile-color-active');
+                            isTappedOnce = true;
+                        }
                     }
-                    // Si isTappedOnce ya es true, el código no hace e.preventDefault()
-                    // y el enlace a Google Maps se abrirá de forma nativa.
-                }
-            });
+                });
+            }
+
+            // LÓGICA INTELIGENTE PARA EL CORREO ELECTRÓNICO
+            const emailLink = document.getElementById('emailContactLink');
+            // Si detecta que es un dispositivo móvil/tablet táctil o pantalla pequeña
+            if (window.matchMedia("(pointer: coarse)").matches || window.innerWidth <= 900) {
+                emailLink.href = "mailto:ahsclimatizacion@gmail.com";
+                emailLink.removeAttribute("target"); // Evita que se abra pestaña en blanco en móvil
+            }
         });
     </script>
 </body>
