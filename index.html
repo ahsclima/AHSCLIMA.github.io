@@ -15,8 +15,8 @@
             --text-dark: #111111;
             --text-light: #f5f5f7;
             --text-muted: #86868b;
-            --brand-red: #cc0000; /* Rojo del logo */
-            --brand-blue: #0066cc; /* Azul del logo */
+            --brand-red: #cc0000;
+            --brand-blue: #0066cc;
             --transition-smooth: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -47,7 +47,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 5vw; /* Reducido un poco el padding vertical para acomodar el logo más grande */
+            padding: 15px 5vw;
             border-bottom: 1px solid rgba(0,0,0,0.05);
             transition: padding 0.4s ease, background 0.4s ease;
         }
@@ -58,9 +58,9 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.05);
         }
 
-        /* Logo de navegación más grande */
-        .nav-logo { height: 60px; transition: 0.3s; }
-        .nav-scrolled .nav-logo { height: 50px; }
+        /* Logo de navegación AÚN MÁS grande */
+        .nav-logo { height: 80px; transition: 0.3s; display: block; }
+        .nav-scrolled .nav-logo { height: 60px; }
         
         .nav-links {
             display: flex;
@@ -72,16 +72,15 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-weight: 700; /* Un poco más de peso para que destaquen los colores */
+            font-weight: 700;
             opacity: 0.85;
             transition: 0.3s;
         }
 
-        /* Colores personalizados para los enlaces del menú */
-        .nav-link-experiencia { color: var(--brand-red); }
-        .nav-link-especialidad { color: var(--text-dark); }
-        .nav-link-filosofia { color: var(--brand-blue); }
-        .nav-link-contacto { color: var(--text-dark); }
+        .nav-link-experiencia { color: var(--brand-red) !important; }
+        .nav-link-especialidad { color: var(--text-dark) !important; }
+        .nav-link-filosofia { color: var(--brand-blue) !important; }
+        .nav-link-contacto { color: var(--text-dark) !important; }
 
         .nav-links a:hover { opacity: 1; transform: scale(1.05); }
 
@@ -152,7 +151,13 @@
             display: block;
         }
 
-        /* LOGO PRINCIPAL EN HERO CON ANIMACIÓN B/N A COLOR */
+        /* LOGO PRINCIPAL EN HERO INTERACTIVO */
+        .hero-logo-link {
+            display: inline-block;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         .hero-main-logo {
             width: clamp(200px, 40vw, 450px);
             margin: 10px auto 30px auto;
@@ -163,10 +168,11 @@
             cursor: pointer;
         }
 
-        .hero-main-logo:hover {
-            filter: grayscale(0%);
-            opacity: 1;
-            transform: scale(1.05);
+        /* La clase mobile-color-active se añade vía JS en el primer toque del móvil */
+        .hero-main-logo:hover, .mobile-color-active {
+            filter: grayscale(0%) !important;
+            opacity: 1 !important;
+            transform: scale(1.05) !important;
         }
 
         /* DISEÑO DIVIDIDO */
@@ -283,11 +289,14 @@
         }
     </style>
 </head>
-<body>
+<body id="inicio">
 
     <!-- NAVEGACIÓN CRISTAL -->
     <nav id="navbar">
-        <img src="logo-basico.png" alt="AHS Logo" class="nav-logo">
+        <!-- Enlace al inicio de la página -->
+        <a href="#inicio" style="text-decoration: none;">
+            <img src="logo-basico.png" alt="AHS Logo" class="nav-logo">
+        </a>
         <div class="nav-links">
             <a href="#experiencia" class="nav-link-experiencia">Experiencia</a>
             <a href="#servicios" class="nav-link-especialidad">Especialidad</a>
@@ -302,8 +311,12 @@
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="kicker reveal-up">Instalaciones y Montajes de climatización</span>
-            <!-- Logo principal con efecto hover blanco y negro a color -->
-            <img src="logo-basico.png" alt="AHS Logo Principal" class="hero-main-logo reveal-up delay-1">
+            
+            <!-- Logo principal interactivo con Google Maps -->
+            <a href="https://maps.app.goo.gl/J4uYg6714cYSWFQcA" target="_blank" class="hero-logo-link" id="heroMapLink">
+                <img src="logo-basico.png" alt="AHS Logo Principal" class="hero-main-logo reveal-up delay-1" id="heroMainLogo">
+            </a>
+            
             <span class="kicker reveal-up delay-2" style="margin-top: 30px;">Venta y reparaciones de maquinaria de Hostelería</span>
         </div>
     </section>
@@ -405,9 +418,10 @@
         <p>&copy; 2026 AHS Climatización y Hostelería. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- SCRIPT DE ANIMACIONES -->
+    <!-- SCRIPT DE ANIMACIONES Y LÓGICA DE MÓVIL -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Animación del Navbar
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
@@ -417,6 +431,7 @@
                 }
             });
 
+            // Intersection Observer (Animaciones al deslizar)
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -434,6 +449,25 @@
 
             const elementsToAnimate = document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-left, .reveal-right');
             elementsToAnimate.forEach(el => observer.observe(el));
+
+            // Lógica avanzada para el Logo en dispositivos táctiles (1 toque color, 2 toques mapa)
+            const heroMapLink = document.getElementById('heroMapLink');
+            const heroMainLogo = document.getElementById('heroMainLogo');
+            let isTappedOnce = false;
+
+            heroMapLink.addEventListener('click', function(e) {
+                // Comprueba si el dispositivo usa pantalla táctil
+                if (window.matchMedia("(pointer: coarse)").matches) {
+                    if (!isTappedOnce) {
+                        // Es el primer toque: prevenimos abrir el enlace y mostramos el color
+                        e.preventDefault(); 
+                        heroMainLogo.classList.add('mobile-color-active');
+                        isTappedOnce = true;
+                    }
+                    // Si isTappedOnce ya es true, el código no hace e.preventDefault()
+                    // y el enlace a Google Maps se abrirá de forma nativa.
+                }
+            });
         });
     </script>
 </body>
